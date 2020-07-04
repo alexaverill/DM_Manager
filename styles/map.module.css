@@ -1,0 +1,18 @@
+.map{
+    width:100%;
+    height:100%;
+}
+.sidebar{
+    width:25%;
+    height:100%;
+    position: absolute;
+    top:0;
+    left:0;
+    background-color: white;
+    transform:translateX(-100%);
+    transition:.5s ease;
+}
+.sidebar_visible{
+    transform: translateX(0%);
+    height:100vh
+}
