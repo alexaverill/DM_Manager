@@ -1,18 +1,19 @@
 //TOOD: Load from Database.
-const PointType = {
-    Encounter:"Encounter",
-    Treasure:"Treasure",
-    POI:"POI",
-    Cave:"Cave",
-    Town:"Town",
-    Shipwreck:"Shipwreck"
-}
+const PointType = [
+    "Encounter",
+    "Treasure",
+    "POI",
+    "Cave",
+    "Town",
+    "Shipwreck"
+]
 class MapPoint{
     constructor(){
         this.name = '';
-        this.type = PointType.POI;
+        this.type = "POI";
         this._x = 0;
         this._y = 0;
+        this._description="";
     }
     get x(){
         return this._x;
@@ -35,6 +36,12 @@ class MapPoint{
     }
     set name(value){
         this._name = value;
+    }
+    get _description(){
+        return this._description;
+    }
+    set _description(value){
+        this._description = value;
     }
 
 }

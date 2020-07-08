@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../styles/map.module.css';
+import DataPointEdit from '../components/DataPointEdit';
 export default class Map extends React.Component{
     constructor(props){
         super(props);
@@ -31,8 +32,11 @@ export default class Map extends React.Component{
         image.src = '/dnd_terrain-v1.png'
     }
     handleClick(event){
-        console.log("clicked");
+        
         let _sidebar = this.state.sidebar;
+        if(_sidebar){
+            return;
+        }
         this.setState({sidebar:!_sidebar});
     }
     render(){
@@ -44,6 +48,7 @@ export default class Map extends React.Component{
             <canvas id="map-canvas" className={styles.map} onLoad={this.loadImage} onClick={this.handleClick}></canvas>
             <div className={sidebarClasses}>
                 <h2>Data Entry!</h2>
+                <DataPointEdit/>
             </div>
             </>
         )
