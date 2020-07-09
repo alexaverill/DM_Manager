@@ -52,7 +52,7 @@ export default class Map extends React.Component{
             <canvas id="map-canvas" className={styles.map} onLoad={this.loadImage} onClick={this.handleClick}></canvas>
             <div className={sidebarClasses}>
                 <h2>Data Entry!</h2>
-                <DataPointEdit cancel={this.handleSidebarCancel}/>
+                <DataPointEdit close={this.handleSidebarCancel}/>
             </div>
             </>
         )

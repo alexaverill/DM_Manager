@@ -32,7 +32,7 @@ export default class DataPointEdit extends Component {
         });
     }
     handleCancel(){
-        this.props.cancel();
+        this.props.close();
     }
     render() {
         let types = this.state.types.map((type)=>
