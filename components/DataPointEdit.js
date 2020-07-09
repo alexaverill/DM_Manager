@@ -9,6 +9,7 @@ export default class DataPointEdit extends Component {
     constructor(props){
         super(props);
         this.state = {types:[],visibility:[]}
+        this.handleCancel = this.handleCancel.bind(this);
     }
     componentDidMount(){
         GetRequest("http://localhost:3000/api/pointtypes").then((data)=>{
@@ -29,6 +30,9 @@ export default class DataPointEdit extends Component {
                 console.log("Failure returninng visilibity from API");
             }
         });
+    }
+    handleCancel(){
+        this.props.cancel();
     }
     render() {
         let types = this.state.types.map((type)=>
@@ -64,7 +68,7 @@ export default class DataPointEdit extends Component {
                 
                         <Row>
                             <Col><Button variant="primary">Save</Button></Col>
-                            <Col><Button variant="danger">Cancel</Button></Col>
+                            <Col><Button variant="danger" onClick={this.handleCancel}>Cancel</Button></Col>
                         </Row>
                     
 

@@ -7,6 +7,7 @@ export default class Map extends React.Component{
         this.handleClick = this.handleClick.bind(this);
         this.loadImage = this.loadImage.bind(this);
         this.state = {canvas:undefined,ctx:undefined}
+        this.handleSidebarCancel = this.handleSidebarCancel.bind(this);
 
     }
     componentDidMount(){
@@ -39,6 +40,9 @@ export default class Map extends React.Component{
         }
         this.setState({sidebar:!_sidebar});
     }
+    handleSidebarCancel(){
+        this.setState({sidebar:false})
+    }
     render(){
         let sidebarVis = this.state.sidebar ? styles.sidebar_visible : '';
         let sidebarClasses = `${styles.sidebar} ${sidebarVis}`;
@@ -48,7 +52,7 @@ export default class Map extends React.Component{
             <canvas id="map-canvas" className={styles.map} onLoad={this.loadImage} onClick={this.handleClick}></canvas>
             <div className={sidebarClasses}>
                 <h2>Data Entry!</h2>
-                <DataPointEdit/>
+                <DataPointEdit cancel={this.handleSidebarCancel}/>
             </div>
             </>
         )
