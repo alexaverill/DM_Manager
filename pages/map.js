@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from '../styles/map.module.css';
 import DataPointEdit from '../components/DataPointEdit';
+import {GetRequest,PostRequest} from '../components/api';
 export default class Map extends React.Component{
     constructor(props){
         super(props);
@@ -33,7 +34,16 @@ export default class Map extends React.Component{
         image.src = '/dnd_terrain-v1.png'
     }
     handleClick(event){
-        
+        let mapMock = {
+            name:"Test1",
+            type:1,
+            permissions:1,
+            description:"This is a test!",
+            x:100,
+            y:500
+
+        }
+        PostRequest('http://localhost:3000/api/mappoint',mapMock);
         let _sidebar = this.state.sidebar;
         if(_sidebar){
             return;

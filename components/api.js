@@ -7,7 +7,14 @@ async function GetRequest(url){
     }
     return {status:"failed"};
 }
-
+async function PostRequest(url,data){
+    const response = await fetch(url,{
+        method:'POST',
+        body:JSON.stringify(data)
+    });
+    return response.json();
+}
 module.exports = {
-    GetRequest
+    GetRequest,
+    PostRequest
 }
