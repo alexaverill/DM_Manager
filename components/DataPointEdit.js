@@ -10,12 +10,13 @@ export default class DataPointEdit extends Component {
     constructor(props){
         super(props);
         console.log(props);
-        this.state = {types:[],visibility:[],name:"",description:"",x:this.props.x,y:this.props.y,type:0,visible:0}
+        this.state = {types:[],visibility:[],name:"",description:"",x:this.props.x,y:this.props.y,type:0,permission:0}
         this.handleName = this.handleName.bind(this);
         this.handleType = this.handleType.bind(this);
         this.handleDesc = this.handleDesc.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleSave = this.handleSave.bind(this);
+        this.handlePerms = this.handlePerms.bind(this);
     }
     componentDidMount(){
         GetRequest("http://localhost:3000/api/pointtypes").then((data)=>{
@@ -45,10 +46,12 @@ export default class DataPointEdit extends Component {
         this.setState({description:event.target.value})
     }
     handleSave(){
+        console.log(this.state.permission);
+       
         let pointData = {
             name:this.state.name,
             type:this.state.type,
-            permissions:this.state.visible,
+            permissions:this.state.permission,
             description:this.state.description,
             x:this.props.x,
             y:this.props.y
@@ -60,7 +63,8 @@ export default class DataPointEdit extends Component {
         this.setState({type:event.target.value});
     }
     handlePerms(event){
-        this.setState({visible:event.target.value});
+        
+        this.setState({permission:event.target.value});
     }
     handleCancel(){
         this.props.close();
@@ -89,7 +93,8 @@ export default class DataPointEdit extends Component {
                     </Form.Group>
                     <Form.Group controlId="visibility">
                         <Form.Label>Visibility</Form.Label>
-                        <Form.Control as="select">
+                        <Form.Control as="select" onChange={this.handlePerms}>
+                            <option></option>
                             {visibility}
                         </Form.Control>
                     </Form.Group>

@@ -9,9 +9,14 @@ function UpdatePoint(){
 async function SaveMapPoint(data){
     //Map.testing();
     // console.log(data);
+    let type = data.type;
+    let permission = data.permissions;
      let newP = {name:data.name,xPos:data.x,yPos:data.y,description:data.description};
     // //console.log(newP);
-    MapControl.Map.create(newP)
+    let point = await MapControl.Map.create(newP);
+    console.log("Perms: "+permission);
+    await point.setPermission(permission);
+    await point.setType(type);
     //await Map.create(newP);
     
     return {id:0};
