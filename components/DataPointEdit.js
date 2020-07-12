@@ -8,8 +8,10 @@ import {GetRequest} from '../components/api';
 export default class DataPointEdit extends Component {
     constructor(props){
         super(props);
-        this.state = {types:[],visibility:[]}
+        console.log(props);
+        this.state = {types:[],visibility:[],name:"",description:"",x:this.props.x,y:this.props.y}
         this.handleCancel = this.handleCancel.bind(this);
+        this.handleSave = this.handleSave.bind(this);
     }
     componentDidMount(){
         GetRequest("http://localhost:3000/api/pointtypes").then((data)=>{
@@ -31,6 +33,18 @@ export default class DataPointEdit extends Component {
             }
         });
     }
+    handleSave(){
+        let mapMock = {
+            name:"Test1",
+            type:1,
+            permissions:1,
+            description:"This is a test!",
+            x:100,
+            y:500
+
+        }
+        PostRequest('http://localhost:3000/api/mappoint',mapMock);
+    }
     handleCancel(){
         this.props.close();
     }
@@ -43,6 +57,7 @@ export default class DataPointEdit extends Component {
         );
         return (
             <Container>
+                <h1>{this.props.x} {this.props.y}</h1>
                 <Form>
                     <Form.Group controlId="title">
                         <Form.Label>Title</Form.Label>
@@ -67,7 +82,7 @@ export default class DataPointEdit extends Component {
                     </Form.Group>
                 
                         <Row>
-                            <Col><Button variant="primary">Save</Button></Col>
+                            <Col><Button variant="primary" onClick={this.handleSave}>Save</Button></Col>
                             <Col><Button variant="danger" onClick={this.handleCancel}>Cancel</Button></Col>
                         </Row>
                     
