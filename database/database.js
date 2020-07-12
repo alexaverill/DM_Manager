@@ -14,20 +14,18 @@ const Types = TypeModel(sequelize,Sequelize);
 const Map = MapModel(sequelize,Sequelize);
 
 
-//Map.belongsTo(Permissions);
-//Map.belongsTo(Types);
+Map.belongsTo(Permissions);
+Map.belongsTo(Types);
 
 // sequelize.sync({force:false}).then(()=>{
 //     console.log("Created Tables");
 
 // });
 
-function test(){
-    Map.create({name:"test"})
-}
 console.log("Test");
 module.exports = {
     Map,
-    test
+    Permissions,
+    Types
 }
 

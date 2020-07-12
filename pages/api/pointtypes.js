@@ -1,9 +1,18 @@
-export default (req, res) => {
+let Database = require('../../database/database')
+export default async function (req, res) {
     res.statusCode = 200
-    // "Treasure",
-    // "POI",
-    // "Cave",
-    // "Town",
-    // "Shipwreck"
-    res.json({ types: ['POI','Encounter','Cave','Dungeon','Town','Shipwreck'] })
+    let data = await Database.Types.findAll(
+      {
+        attributes:['id','typeName']
+      })
+      .then((data)=>{
+        let tmpList = [];
+        data.forEach((datapoint)=>{
+            tmpList.push(datapoint.dataValues);
+        });
+        return tmpList;
+      
+      });
+    //console.log(data);
+    res.json({ types: data })
   }

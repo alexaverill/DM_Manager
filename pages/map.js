@@ -35,12 +35,12 @@ export default class Map extends React.Component{
         image.src = '/dnd_terrain-v1.png'
     }
     handleClick(event){
-        console.log(event.clientX);
-        this.setState({x:event.clientX,y:event.clientY});
+     
         let _sidebar = this.state.sidebar;
         if(_sidebar){
             return;
         }
+        this.setState({x:event.clientX,y:event.clientY});
         this.setState({sidebar:!_sidebar});
        
     }
