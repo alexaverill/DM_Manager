@@ -44,7 +44,7 @@ class MapPoint{
         this._description = value;
     }
     hitTest(x,y,radius){
-        if(this.x-radius <= x && this.x + radius >= x && this.y -radius <= x && this.y + radius >=y ){
+        if(this.x-radius <= x && this.x + radius >= x && this.y -radius <= y && this.y + radius >=y ){ //
             return true;
         }
         return false;

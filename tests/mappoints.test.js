@@ -33,5 +33,6 @@ test('Mapoint hittest in bounds',()=>{
     let m = new MapPoint.MapPoint(10,10,'','','');
     expect(m.hitTest(10,10,10)).toBe(true);
     expect(m.hitTest(30,30,10)).toBe(false);
+    expect(m.hitTest(10,14,10)).toBe(true);
     expect(m.hitTest(5,5,10)).toBe(true);
 })

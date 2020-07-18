@@ -2,6 +2,7 @@ import React from 'react';
 import styles from '../styles/map.module.css';
 import DataPointEdit from '../components/DataPointEdit';
 import {GetRequest,PostRequest} from '../components/api';
+import MapPoint from '../models/MapPoint';
 export default class Map extends React.Component{
     constructor(props){
         super(props);
@@ -21,7 +22,12 @@ export default class Map extends React.Component{
         this.loadImage();
         console.log("loading points?");
         GetRequest('http://localhost:3000/api/mappoint').then((data)=>{
-            this.setState({points:data.points});
+            let mapPoints = []
+            data.points.forEach((point)=>{
+                
+                mapPoints.push(new MapPoint.MapPoint(point.xPos,point.yPos,point.name,point.description,'',''))
+            });
+            this.setState({points:mapPoints});
             this.renderPoints();
         });
     }
@@ -31,9 +37,9 @@ export default class Map extends React.Component{
         console.log("Size: "+ this.state.canvas.width + " " + this.state.canvas.height);
         
         this.state.points.forEach(p=>{
-            console.log(`${p.name} ${p.xPos} ${p.yPos}` );
-            let x = p.xPos;
-            let y = p.yPos; 
+        
+            let x = p.x;
+            let y = p.y; 
             ctx.fillRect(x,y,20,20);
             //ctx.endPath();
         });
@@ -66,10 +72,12 @@ export default class Map extends React.Component{
     hitTest(x,y,points,radius){
         let id = -1;
         let found = false;
+        console.log(x + " " +y);
         points.forEach(p =>{
-            console.log(p.xPos + " " +x);
-            if(p.xPos > x-radius && p.xPos < x+radius){
-                console.log("found one");
+            console.log(p);
+            console.log(p.hitTest(x,y,100));
+            if(p.hitTest(x,y,radius)){
+                console.log("Found "+p.name);
             }
         });
         return {found:false,id:null};
@@ -84,7 +92,7 @@ export default class Map extends React.Component{
         let xPos = event.clientX-bounds.left;
         let yPos = event.clientY - bounds.top;
         let worldPos = this.screenToWorld(xPos,yPos,event.target);
-        this.hitTest(worldPos.x,worldPos.y,this.state.points,10);
+        this.hitTest(worldPos.x,worldPos.y,this.state.points,100);
         return;
         //hittest then decide if it needs to be created or edited.
         this.setState({x:worldPos.x,y:worldPos.y});
