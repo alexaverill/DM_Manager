@@ -1,3 +1,5 @@
+import { Database } from 'sqlite3';
+
 //import {Map,test} from '../../database/database';
 let MapControl = require('../../database/database')
 function CreatePoint(){
@@ -16,7 +18,7 @@ async function SaveMapPoint(data){
     let point = await MapControl.Map.create(newP);
     console.log("Perms: "+permission);
     await point.setPermission(permission);
-    await point.setType(type);
+    //await point.setType(type);
     //await Map.create(newP);
     
     return {id:0};
@@ -28,7 +30,10 @@ export default async function (req, res) {
         //create new map point?
         res.json({test:mapPoint});
     }else{
-        res.json({points:[]});
+        console.log("test");
+        let mapPoints = await MapControl.Map.findAll();
+        //console.log(mapPoints);
+        res.json({points:mapPoints});
     }
     // res.statusCode = 200
     // // "Treasure",
