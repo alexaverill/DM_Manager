@@ -8,7 +8,8 @@ const PointType = [
     "Shipwreck"
 ]
 class MapPoint{
-    constructor(x,y,name,description,type){
+    constructor(_id,x,y,name,description,type){
+        this.id = _id;
         this.name = name;
         this.type = type;
         this._x = x;

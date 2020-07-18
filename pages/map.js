@@ -21,11 +21,15 @@ export default class Map extends React.Component{
         this.setState({canvas:_canvas,ctx:context,sidebar:false});
         this.loadImage();
         console.log("loading points?");
+        this.updateMapPoints();
+    }
+    updateMapPoints(){
         GetRequest('http://localhost:3000/api/mappoint').then((data)=>{
             let mapPoints = []
+            console.log(data);
             data.points.forEach((point)=>{
-                
-                mapPoints.push(new MapPoint.MapPoint(point.xPos,point.yPos,point.name,point.description,'',''))
+                console.log(point);
+                mapPoints.push(new MapPoint.MapPoint(point.id,point.xPos,point.yPos,point.name,point.description,'',''))
             });
             this.setState({points:mapPoints});
             this.renderPoints();
@@ -115,6 +119,7 @@ export default class Map extends React.Component{
         this.setState({sidebar:false,hasPoint:false});
     }
     handleSidebarSave(){
+        this.updateMapPoints();
         this.setState({sidebar:false,hasPoint:false});
     }
     render(){
@@ -133,8 +138,8 @@ export default class Map extends React.Component{
             <div className={sidebarClasses}>
                 <h2>Data Entry!</h2>
                 { this.state.hasPoint?
-                    <DataPointEdit close ={this.handleSidebarCancel} save={this.handleSidebarSave} x={this.state.activePoint.x} y={this.state.activePoint.y} name={this.state.activePoint.name} description={this.state.activePoint.description}/>
-                :<DataPointCreate close={this.handleSidebarCancel} save={this.handleSidebarSave} x={xPos} y={yPos}/>
+                    <DataPointEdit close ={this.handleSidebarCancel} save={this.handleSidebarSave} id={this.state.activePoint.id} x={this.state.activePoint.x} y={this.state.activePoint.y} name={this.state.activePoint.name} description={this.state.activePoint.description}/>
+                :<DataPointCreate id={0} close={this.handleSidebarCancel} save={this.handleSidebarSave} x={xPos} y={yPos}/>
                 }
             </div>
             </>

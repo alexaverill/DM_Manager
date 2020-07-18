@@ -2,26 +2,36 @@ import { Database } from 'sqlite3';
 
 //import {Map,test} from '../../database/database';
 let MapControl = require('../../database/database')
-function CreatePoint(){
-
-}
-function UpdatePoint(){
-
-}
 async function SaveMapPoint(data){
     //Map.testing();
     // console.log(data);
     let type = data.type;
     let permission = data.permissions;
      let newP = {name:data.name,xPos:data.x,yPos:data.y,description:data.description};
-    // //console.log(newP);
-    let point = await MapControl.Map.create(newP);
-    console.log("Perms: "+permission);
-    await point.setPermission(permission);
+    let point;
+    if(data.id >0){
+        point = await MapControl.Map.update(
+            {
+                name:newP.name,
+                description:newP.description
+                
+            },
+            {
+                where:{
+                    id:data.id
+                }
+            }
+        );
+        //await point.setPermission(permission);
+    }else{
+        point = await MapControl.Map.create(newP);
+        await point.setPermission(permission);
+    }
+    
     //await point.setType(type);
     //await Map.create(newP);
     
-    return {id:0};
+    return {id:point.id};
 }
 export default async function (req, res) {
     if(req.method === 'POST'){
