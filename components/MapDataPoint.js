@@ -4,9 +4,8 @@ import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import { Col,Row } from 'react-bootstrap';
-import {GetRequest,PostRequest} from '../components/api';
-
-export default class DataPointEdit extends Component {
+import {GetRequest,PostRequest} from './api';
+class DataPoint extends Component{
     constructor(props){
         super(props);
         console.log(props);
@@ -58,6 +57,7 @@ export default class DataPointEdit extends Component {
 
         }
         PostRequest('http://localhost:3000/api/mappoint',pointData);
+        this.props.save();
     }
     handleType(event){
         this.setState({type:event.target.value});
@@ -69,20 +69,22 @@ export default class DataPointEdit extends Component {
     handleCancel(){
         this.props.close();
     }
+}
+export class DataPointCreate extends DataPoint{
     render() {
         let types = this.state.types.map((type)=>
             <option value={type.id}>{type.typeName}</option>
         );
         let visibility = this.state.visibility.map((perms)=>
         <option value={perms.id}>{perms.name}</option>
-        );
+        );        
+        let nameInput = <Form.Control as="input" onChange = {this.handleName}/>
         return (
             <Container>
-                <h1>{this.props.x} {this.props.y}</h1>
                 <Form>
                     <Form.Group controlId="title">
                         <Form.Label>Title</Form.Label>
-                        <Form.Control type="text" onChange={this.handleName} value={this.props.name}/>
+                        <Form.Control as="input" onChange = {this.handleName}/>
                     </Form.Group>
                     <Form.Group controlId="type">
                         <Form.Label>Type</Form.Label>
@@ -100,7 +102,63 @@ export default class DataPointEdit extends Component {
                     </Form.Group>
                     <Form.Group controlId="description">
                         <Form.Label>Description</Form.Label>
-                        <Form.Control as="textarea" rows="3" onChange={this.handleDesc} value={this.props.description}/>
+                        <Form.Control as="textarea" rows="3" onChange={this.handleDesc}/>
+                    </Form.Group>
+                
+                        <Row>
+                            <Col><Button variant="primary" onClick={this.handleSave}>Save</Button></Col>
+                            <Col><Button variant="danger" onClick={this.handleCancel}>Cancel</Button></Col>
+                        </Row>
+                    
+
+
+                </Form>
+            </Container>
+        )
+    }
+}
+export class DataPointEdit extends DataPoint {
+    constructor(props){
+        super(props);
+        
+    }
+    componentDidMount(){
+        super.componentDidMount();
+        this.setState({name:this.props.name, description:this.props.description, type:1,permission:1});
+    }
+    render() {
+        let types = this.state.types.map((type)=>
+            <option value={type.id}>{type.typeName}</option>
+        );
+        let visibility = this.state.visibility.map((perms)=>
+        <option value={perms.id}>{perms.name}</option>
+        );        
+        let nameInput = <Form.Control as="input" onChange = {this.handleName} value={this.state.name}/>
+        let description = <Form.Control as="textarea" rows="3" onChange={this.handleDesc} value={this.state.description}/>
+        return (
+            <Container>
+                <Form>
+                    <Form.Group controlId="title">
+                        <Form.Label>Title</Form.Label>
+                       {nameInput}
+                    </Form.Group>
+                    <Form.Group controlId="type">
+                        <Form.Label>Type</Form.Label>
+                        <Form.Control as="select" onChange={this.handleType}>
+                            <option></option>
+                             {types} 
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="visibility">
+                        <Form.Label>Visibility</Form.Label>
+                        <Form.Control as="select" onChange={this.handlePerms}>
+                            <option></option>
+                            {visibility}
+                        </Form.Control>
+                    </Form.Group>
+                    <Form.Group controlId="description">
+                        <Form.Label>Description</Form.Label>
+                        {description}
                     </Form.Group>
                 
                         <Row>

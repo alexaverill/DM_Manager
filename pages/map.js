@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from '../styles/map.module.css';
-import DataPointEdit from '../components/DataPointEdit';
+import {DataPointEdit,DataPointCreate} from '../components/MapDataPoint';
 import {GetRequest,PostRequest} from '../components/api';
 import MapPoint from '../models/MapPoint';
 export default class Map extends React.Component{
@@ -9,7 +9,7 @@ export default class Map extends React.Component{
         this.state = {canvas:undefined,ctx:undefined,x:0,y:0,points:[],hasPoint:false, activePoint:{}}
         this.handleClick = this.handleClick.bind(this);
         this.loadImage = this.loadImage.bind(this);
-       
+       this.handleSidebarSave = this.handleSidebarSave.bind(this);
         this.handleSidebarCancel = this.handleSidebarCancel.bind(this);
         
     }
@@ -30,6 +30,9 @@ export default class Map extends React.Component{
             this.setState({points:mapPoints});
             this.renderPoints();
         });
+    }
+    componentDidUpdate(){
+        console.log(this.props.name);
     }
     renderPoints(){
         let ctx = this.state.canvas.getContext('2d'); //todo fix this to be stored in state. 
@@ -75,6 +78,7 @@ export default class Map extends React.Component{
 
         for(let i =0; i<points.length; i++){
             if(points[i].hitTest(x,y,radius)){
+                console.log("found "+points[i].name);
                 _found = true;
                 _id = i;
                 break;
@@ -83,6 +87,7 @@ export default class Map extends React.Component{
 
         return {found:_found,id:_id};
     }
+
     handleClick(event){
         
         let _sidebar = this.state.sidebar;
@@ -93,10 +98,10 @@ export default class Map extends React.Component{
         let xPos = event.clientX-bounds.left;
         let yPos = event.clientY - bounds.top;
         let worldPos = this.screenToWorld(xPos,yPos,event.target);
-        let test = this.hitTest(worldPos.x,worldPos.y,this.state.points,10);
+        let test = this.hitTest(worldPos.x,worldPos.y,this.state.points,50);
         if(test.found){
             let point = this.state.points[test.id];
-            console.log(point);
+            
             this.setState({hasPoint:true,activePoint:point});
         }else{
             this.setState({hasPoint:false,activePoint:{}});
@@ -107,24 +112,30 @@ export default class Map extends React.Component{
        
     }
     handleSidebarCancel(){
-        this.setState({sidebar:false})
+        this.setState({sidebar:false,hasPoint:false});
+    }
+    handleSidebarSave(){
+        this.setState({sidebar:false,hasPoint:false});
     }
     render(){
         let sidebarVis = this.state.sidebar ? styles.sidebar_visible : '';
         let sidebarClasses = `${styles.sidebar} ${sidebarVis}`;
         let xPos = this.state.x;
         let yPos = this.state.y;
-        let name = this.state.hasPoint !== undefined ? this.state.activePoint.name: '';
-        let description = this.state.hasPoint !== undefined ? this.state.activePoint.description : '';
+        const name = this.state.hasPoint ? this.state.activePoint.name: '';
+        console.log(name);
+        let description = this.state.hasPoint ? this.state.activePoint.description : '';
         let type = 1;
         let visibility = 1;
         return(
             <>
-            <h1>THis is a map</h1>
             <canvas id="map-canvas" className={styles.map} onLoad={this.loadImage} onClick={this.handleClick}></canvas>
             <div className={sidebarClasses}>
                 <h2>Data Entry!</h2>
-                <DataPointEdit close={this.handleSidebarCancel} x={xPos} y={yPos} name={name} description={description} type={type} visibility={visibility}/>
+                { this.state.hasPoint?
+                    <DataPointEdit close ={this.handleSidebarCancel} save={this.handleSidebarSave} x={this.state.activePoint.x} y={this.state.activePoint.y} name={this.state.activePoint.name} description={this.state.activePoint.description}/>
+                :<DataPointCreate close={this.handleSidebarCancel} save={this.handleSidebarSave} x={xPos} y={yPos}/>
+                }
             </div>
             </>
         )

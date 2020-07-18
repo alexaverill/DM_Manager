@@ -11,6 +11,7 @@
     background-color: white;
     transform:translateX(-100%);
     transition:.5s ease;
+    position: fixed;
 }
 .sidebar_visible{
     transform: translateX(0%);
