@@ -82,7 +82,7 @@ export default class DataPointEdit extends Component {
                 <Form>
                     <Form.Group controlId="title">
                         <Form.Label>Title</Form.Label>
-                        <Form.Control type="text" onChange={this.handleName}/>
+                        <Form.Control type="text" onChange={this.handleName} value={this.props.name}/>
                     </Form.Group>
                     <Form.Group controlId="type">
                         <Form.Label>Type</Form.Label>
@@ -100,7 +100,7 @@ export default class DataPointEdit extends Component {
                     </Form.Group>
                     <Form.Group controlId="description">
                         <Form.Label>Description</Form.Label>
-                        <Form.Control as="textarea" rows="3" onChange={this.handleDesc} />
+                        <Form.Control as="textarea" rows="3" onChange={this.handleDesc} value={this.props.description}/>
                     </Form.Group>
                 
                         <Row>

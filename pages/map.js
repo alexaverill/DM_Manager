@@ -6,7 +6,7 @@ import MapPoint from '../models/MapPoint';
 export default class Map extends React.Component{
     constructor(props){
         super(props);
-        this.state = {canvas:undefined,ctx:undefined,x:0,y:0,points:[]}
+        this.state = {canvas:undefined,ctx:undefined,x:0,y:0,points:[],hasPoint:false, activePoint:{}}
         this.handleClick = this.handleClick.bind(this);
         this.loadImage = this.loadImage.bind(this);
        
@@ -70,17 +70,18 @@ export default class Map extends React.Component{
         return {x:xPos,y:yPos}
     }
     hitTest(x,y,points,radius){
-        let id = -1;
-        let found = false;
-        console.log(x + " " +y);
-        points.forEach(p =>{
-            console.log(p);
-            console.log(p.hitTest(x,y,100));
-            if(p.hitTest(x,y,radius)){
-                console.log("Found "+p.name);
+        let _id = -1;
+        let _found = false;
+
+        for(let i =0; i<points.length; i++){
+            if(points[i].hitTest(x,y,radius)){
+                _found = true;
+                _id = i;
+                break;
             }
-        });
-        return {found:false,id:null};
+        }
+
+        return {found:_found,id:_id};
     }
     handleClick(event){
         
@@ -92,8 +93,14 @@ export default class Map extends React.Component{
         let xPos = event.clientX-bounds.left;
         let yPos = event.clientY - bounds.top;
         let worldPos = this.screenToWorld(xPos,yPos,event.target);
-        this.hitTest(worldPos.x,worldPos.y,this.state.points,100);
-        return;
+        let test = this.hitTest(worldPos.x,worldPos.y,this.state.points,10);
+        if(test.found){
+            let point = this.state.points[test.id];
+            console.log(point);
+            this.setState({hasPoint:true,activePoint:point});
+        }else{
+            this.setState({hasPoint:false,activePoint:{}});
+        }
         //hittest then decide if it needs to be created or edited.
         this.setState({x:worldPos.x,y:worldPos.y});
         this.setState({sidebar:!_sidebar});
@@ -107,14 +114,17 @@ export default class Map extends React.Component{
         let sidebarClasses = `${styles.sidebar} ${sidebarVis}`;
         let xPos = this.state.x;
         let yPos = this.state.y;
-
+        let name = this.state.hasPoint !== undefined ? this.state.activePoint.name: '';
+        let description = this.state.hasPoint !== undefined ? this.state.activePoint.description : '';
+        let type = 1;
+        let visibility = 1;
         return(
             <>
             <h1>THis is a map</h1>
             <canvas id="map-canvas" className={styles.map} onLoad={this.loadImage} onClick={this.handleClick}></canvas>
             <div className={sidebarClasses}>
                 <h2>Data Entry!</h2>
-                <DataPointEdit close={this.handleSidebarCancel} x={xPos} y={yPos}/>
+                <DataPointEdit close={this.handleSidebarCancel} x={xPos} y={yPos} name={name} description={description} type={type} visibility={visibility}/>
             </div>
             </>
         )
