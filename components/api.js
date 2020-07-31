@@ -14,7 +14,14 @@ async function PostRequest(url,data){
     });
     return response.json();
 }
+async function FilePostRequest(url,data){
+    const response = await fetch(url,{
+        method:'POST',
+        body:data
+    })
+}
 module.exports = {
     GetRequest,
-    PostRequest
+    PostRequest,
+    FilePostRequest
 }

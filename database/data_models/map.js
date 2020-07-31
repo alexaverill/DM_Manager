@@ -1,12 +1,15 @@
 module.exports = (sequelize,type)=>{
-    return sequelize.define('pointTypes',{
-        typeName:{
+    return sequelize.define('map',{
+        name:{
             type:type.STRING
         },
-        representation:{
+        description:{
+            type:type.TEXT
+        },
+        imageURL:{
             type:type.STRING
         },
-        color:{
+        seed:{
             type:type.STRING
         }
     });
