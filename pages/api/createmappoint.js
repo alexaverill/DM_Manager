@@ -4,7 +4,7 @@ async function SaveMapPoint(data){
     // console.log(data);
     let type = data.type;
     let permission = data.permissions;
-     let newP = {name:data.name,xPos:data.x,yPos:data.y,description:data.description};
+     let newP = {name:data.name,xPos:data.x,yPos:data.y,description:data.description,mapId:data.mapId};
     let point;
     if(data.id >0){
         point = await MapControl.MapPoint.update(

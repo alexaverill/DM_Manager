@@ -8,7 +8,7 @@ import { GetRequest, PostRequest } from './api';
 class DataPoint extends Component {
     constructor(props) {
         super(props);
-        this.state = { id:this.props.id,types: [], visibility: [], name: "", description: "", x: this.props.x, y: this.props.y, type: 0, permission: 0 }
+        this.state = { mapId:this.props.mapId,id:this.props.id,types: [], visibility: [], name: "", description: "", x: this.props.x, y: this.props.y, type: 0, permission: 0 }
         this.handleName = this.handleName.bind(this);
         this.handleType = this.handleType.bind(this);
         this.handleDesc = this.handleDesc.bind(this);
@@ -47,6 +47,7 @@ class DataPoint extends Component {
         console.log(this.state.permission);
 
         let pointData = {
+            mapId:this.state.mapId,
             id:this.state.id,
             name: this.state.name,
             type: this.state.type,
@@ -56,7 +57,7 @@ class DataPoint extends Component {
             y: this.props.y
 
         }
-        PostRequest('http://localhost:3000/api/mappoint', pointData);
+        PostRequest('http://localhost:3000/api/createmappoint', pointData);
         this.props.save();
     }
     handleType(event) {

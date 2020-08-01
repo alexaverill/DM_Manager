@@ -1,12 +1,16 @@
 import React from 'react';
-import styles from '../styles/map.module.css';
-import {DataPointEdit,DataPointCreate} from '../components/MapDataPoint';
-import {GetRequest,PostRequest} from '../components/api';
+import {useRouter} from 'next/router';
+import { DataPointCreate,DataPointEdit } from './MapDataPoint';
+import styles from '../styles/map.module.css'
+import {GetRequest,PostRequest} from './api'
 import MapPoint from '../models/MapPoint';
 export default class Map extends React.Component{
     constructor(props){
+
+        
         super(props);
-        this.state = {canvas:undefined,ctx:undefined,x:0,y:0,points:[],hasPoint:false, activePoint:{}}
+        
+        this.state = {mapId:this.props.id,canvas:undefined,ctx:undefined,x:0,y:0,points:[],hasPoint:false, activePoint:{}}
         this.handleClick = this.handleClick.bind(this);
         this.loadImage = this.loadImage.bind(this);
        this.handleSidebarSave = this.handleSidebarSave.bind(this);
@@ -14,17 +18,31 @@ export default class Map extends React.Component{
         
     }
     componentDidMount(){
-        console.log("Mounted");
+       
+
+        console.log("Mounted "+this.props.id + this.state.mapId);
+        this.setState({mapId:this.props.id});
         let _canvas = document.getElementById('map-canvas');
         let context = _canvas.getContext("2D");
         console.log(context);
         this.setState({canvas:_canvas,ctx:context,sidebar:false});
-        this.loadImage();
-        console.log("loading points?");
-        this.updateMapPoints();
+        let data = {
+            id:this.props.id
+        }
+        PostRequest('http://localhost:3000/api/getmapimage',data).then(data=>{
+            console.log(data);
+            if(data.status){
+                return;
+            }
+            this.loadImage(data.mapImage);
+        })
+        
+        
+       // this.updateMapPoints();
     }
+    
     updateMapPoints(){
-        GetRequest('http://localhost:3000/api/mappoint').then((data)=>{
+        PostRequest('http://localhost:3000/api/getmappoints',{id:this.state.mapId}).then((data)=>{
             let mapPoints = []
             console.log(data);
             data.points.forEach((point)=>{
@@ -51,7 +69,7 @@ export default class Map extends React.Component{
             //ctx.endPath();
         });
     }
-    loadImage(){
+    loadImage(imagePath){
         console.log("Loading image");
         let image = new Image();
         image.onload = () =>{
@@ -61,10 +79,11 @@ export default class Map extends React.Component{
             this.renderPoints();
             console.log("Image loaded");
         }
-        image.onerror = ()=>{
-            console.log("Error loading image");
+        image.onerror = (err)=>{
+            console.log("Error loading image ");
         }
-        image.src = '/dnd_terrain-v1.png'
+        imagePath = imagePath.replace('public/','');
+        image.src = 'http://localhost:3000/'+imagePath;
     }
     screenToWorld(x,y, canvas){
         let width = canvas.width;
@@ -126,6 +145,7 @@ export default class Map extends React.Component{
     render(){
         let sidebarVis = this.state.sidebar ? styles.sidebar_visible : '';
         let sidebarClasses = `${styles.sidebar} ${sidebarVis}`;
+
         let xPos = this.state.x;
         let yPos = this.state.y;
         const name = this.state.hasPoint ? this.state.activePoint.name: '';
@@ -139,8 +159,8 @@ export default class Map extends React.Component{
             <div className={sidebarClasses}>
                 <h2>Data Entry!</h2>
                 { this.state.hasPoint?
-                    <DataPointEdit close ={this.handleSidebarCancel} save={this.handleSidebarSave} id={this.state.activePoint.id} x={this.state.activePoint.x} y={this.state.activePoint.y} name={this.state.activePoint.name} description={this.state.activePoint.description}/>
-                :<DataPointCreate id={0} close={this.handleSidebarCancel} save={this.handleSidebarSave} x={xPos} y={yPos}/>
+                    <DataPointEdit close ={this.handleSidebarCancel} save={this.handleSidebarSave} mapId={this.state.mapId} id={this.state.activePoint.id} x={this.state.activePoint.x} y={this.state.activePoint.y} name={this.state.activePoint.name} description={this.state.activePoint.description}/>
+                :<DataPointCreate mapId={this.state.mapId} id={0} close={this.handleSidebarCancel} save={this.handleSidebarSave} x={xPos} y={yPos}/>
                 }
             </div>
             </>

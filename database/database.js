@@ -8,7 +8,8 @@ const TypeModel = require('./data_models/types');
 
 const sequelize = new Sequelize({
     dialect:'sqlite',
-    storage:'./database.sqlite'
+    storage:'./database.sqlite',
+    logging:false
 });
 const Permissions = PermissionModel(sequelize,Sequelize);
 const Types = TypeModel(sequelize,Sequelize);
