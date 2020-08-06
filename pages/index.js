@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link';
-import {Card} from 'react-bootstrap';
+import {Row,Card} from 'react-bootstrap';
 
 export default function Home() {
   return (
@@ -15,18 +15,20 @@ export default function Home() {
           <h1> DM Manager</h1>
         </div>
         <div className="tools">
-    <Card>
+          <Row>
+    <Card className="mr-4 mt-4">
       <Card.Body>
         
         <Card.Link href="map"><Card.Title>Maps</Card.Title></Card.Link>
       </Card.Body>
     </Card>
-    <Card>
+    <Card className="mr-4 mt-4">
       <Card.Body>
         
         <Card.Link href="dungeons"><Card.Title>Dungeons</Card.Title></Card.Link>
       </Card.Body>
     </Card>
+    </Row>
         </div>
        </main>
 

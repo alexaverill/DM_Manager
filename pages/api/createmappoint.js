@@ -19,10 +19,12 @@ async function SaveMapPoint(data){
                 }
             }
         );
-        //await point.setPermission(permission);
+        await point.setPermission(permission);
+        await point.setPointType(type);
     }else{
         point = await MapControl.MapPoint.create(newP);
         await point.setPermission(permission);
+        await point.setPointType(type);
     }
     
     //await point.setType(type);

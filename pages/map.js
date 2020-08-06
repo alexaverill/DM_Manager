@@ -40,7 +40,7 @@ export default class Map extends React.Component {
         let maps = this.state.maps.map((map) => {
             //console.log(map);
             let url ="mapeditor/"+map.id;
-            return <Card><Link href={url}>{map.name}</Link></Card>
+            return <Card className="mt-2 p-2"><Link href={url}>{map.name}</Link></Card>
         });
         return (
             <Container>

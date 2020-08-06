@@ -1,12 +1,3 @@
-//TOOD: Load from Database.
-const PointType = [
-    "Encounter",
-    "Treasure",
-    "POI",
-    "Cave",
-    "Town",
-    "Shipwreck"
-]
 class MapPoint{
     constructor(_id,x,y,name,description,type){
         this.id = _id;
@@ -15,6 +6,7 @@ class MapPoint{
         this._x = x;
         this._y = y;
         this._description=description;
+        console.log(type);
     }
     get x(){
         return this._x;
@@ -52,6 +44,5 @@ class MapPoint{
     }
 }
 module.exports = {
-    MapPoint,
-    PointType
+    MapPoint
 }

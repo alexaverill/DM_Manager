@@ -19,7 +19,7 @@ export default class Map extends React.Component{
     }
     componentDidMount(){
        
-
+        this.updateMapPoints();
         console.log("Mounted "+this.props.id + this.state.mapId);
         this.setState({mapId:this.props.id});
         let _canvas = document.getElementById('map-canvas');
@@ -44,10 +44,8 @@ export default class Map extends React.Component{
     updateMapPoints(){
         PostRequest('http://localhost:3000/api/getmappoints',{id:this.state.mapId}).then((data)=>{
             let mapPoints = []
-            console.log(data);
             data.points.forEach((point)=>{
-                console.log(point);
-                mapPoints.push(new MapPoint.MapPoint(point.id,point.xPos,point.yPos,point.name,point.description,'',''))
+                mapPoints.push(new MapPoint.MapPoint(point.id,point.xPos,point.yPos,point.name,point.description,point.pointType))
             });
             this.setState({points:mapPoints});
             this.renderPoints();
@@ -58,13 +56,14 @@ export default class Map extends React.Component{
     }
     renderPoints(){
         let ctx = this.state.canvas.getContext('2d'); //todo fix this to be stored in state. 
-        console.log(this.state.points.length);
+        //console.log(this.state.points.length);
         console.log("Size: "+ this.state.canvas.width + " " + this.state.canvas.height);
         
         this.state.points.forEach(p=>{
         
             let x = p.x;
             let y = p.y; 
+            ctx.fillStyle = p.type.color;
             ctx.fillRect(x,y,20,20);
             //ctx.endPath();
         });

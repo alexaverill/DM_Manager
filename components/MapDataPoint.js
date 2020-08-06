@@ -57,6 +57,7 @@ class DataPoint extends Component {
             y: this.props.y
 
         }
+        console.log(pointData);
         PostRequest('http://localhost:3000/api/createmappoint', pointData);
         this.props.save();
     }
