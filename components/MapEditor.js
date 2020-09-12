@@ -63,7 +63,11 @@ export default class Map extends React.Component{
         
             let x = p.x;
             let y = p.y; 
+            if(p.type !== null){
             ctx.fillStyle = p.type.color;
+            }else{
+                ctx.fillStyle = "black";
+            }
             ctx.fillRect(x,y,20,20);
             //ctx.endPath();
         });
@@ -124,9 +128,11 @@ export default class Map extends React.Component{
         let test = this.hitTest(worldPos.x,worldPos.y,this.state.points,50);
         if(test.found){
             let point = this.state.points[test.id];
+            console.log("point found");
             
             this.setState({hasPoint:true,activePoint:point});
         }else{
+            console.log("no point found");
             this.setState({hasPoint:false,activePoint:{}});
         }
         //hittest then decide if it needs to be created or edited.

@@ -9,7 +9,8 @@ export default class Map extends React.Component {
         super(props);
         this.state = { maps: [{ id: 1, name: "Test" }],file:null,newName:'' }
         this.onSubmit = this.onSubmit.bind(this);
-        this.fileAdded = this.fileAdded.bind(this);
+        this.fileAdded = this.fileAdded.bind(this);  
+        this.clearInput = this.clearInput.bind(this);
         this.handleNameChanged = this.handleNameChanged.bind(this);
 
     }
@@ -28,7 +29,11 @@ export default class Map extends React.Component {
         formData.append('title',this.state.newName);
         FilePostRequest('http://localhost:3000/api/maps',formData).then(data=>{
             this.getMaps();
+            this.clearInput();
         });
+    }
+    clearInput(){
+        this.setState({file:"",newName:""});
     }
     fileAdded(event){
         this.setState({file:event.target.files[0]});
@@ -53,7 +58,7 @@ export default class Map extends React.Component {
                 <Form onSubmit={this.onSubmit}>
                 <Form.Group controlId="name">
                     <Form.Label>Name</Form.Label>
-                    <Form.Control type="text" name="name" onChange={this.handleNameChanged}/>
+                    <Form.Control type="text" name="name" onChange={this.handleNameChanged} value={this.state.newName}/>
                 </Form.Group>
                 <Form.Group controlId="file">
                     <Form.Label>File</Form.Label>

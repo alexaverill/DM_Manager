@@ -60,6 +60,7 @@ class DataPoint extends Component {
         console.log(pointData);
         PostRequest('http://localhost:3000/api/createmappoint', pointData);
         this.props.save();
+        this.setState({name:"",description:"",id:""})
     }
     handleType(event) {
         this.setState({ type: event.target.value });
@@ -69,6 +70,8 @@ class DataPoint extends Component {
         this.setState({ permission: event.target.value });
     }
     handleCancel() {
+    
+        this.setState({name:"",description:"",id:""})
         this.props.close();
     }
 }
@@ -86,7 +89,7 @@ export class DataPointCreate extends DataPoint {
                 <Form>
                     <Form.Group controlId="title">
                         <Form.Label>Title</Form.Label>
-                        <Form.Control as="input" onChange={this.handleName} />
+                        <Form.Control as="input" onChange={this.handleName} value={this.state.name}/>
                     </Form.Group>
                     <Form.Group controlId="type">
                         <Form.Label>Type</Form.Label>
@@ -104,7 +107,7 @@ export class DataPointCreate extends DataPoint {
                     </Form.Group>
                     <Form.Group controlId="description">
                         <Form.Label>Description</Form.Label>
-                        <Form.Control as="textarea" rows="3" onChange={this.handleDesc} />
+                        <Form.Control as="textarea" rows="3" onChange={this.handleDesc} value={this.state.description}/>
                     </Form.Group>
 
                     <Row>
