@@ -5,6 +5,7 @@ import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import { Col, Row } from 'react-bootstrap';
 import { GetRequest, PostRequest } from './api';
+import Link from 'next/link'
 class DataPoint extends Component {
     constructor(props) {
         super(props);
@@ -177,26 +178,34 @@ export class DataPointEdit extends DataPoint {
             }else{
                 return <option key={perms.id.toString()} value={perms.id}>{perms.name}</option>
             }
-        });       
+        });  
+        let linked ={}     
         let maps = this.state.availableMaps.map((m)=>{
         if(this.state.description == m.id){
+            linked = {name:m.name,id:m.id};
             return <option key={m.id} value={m.id} selected>{m.name}</option>
         }else{
             return <option key={m.id} value={m.id}>{m.name}</option>
         }
     });
+    let link;
         let formEnd;
         if(this.state.type == 6){
+            link = <a href={`/mapeditor/${linked.id}`}>{linked.name}</a>
+            formEnd =
             
-            
-            formEnd = 
             <Form.Group controlId="description">
                  <Form.Label>Linked Layer</Form.Label>
             <Form.Control as="select" onChange={this.handleLink}>
             <option></option>
                             {maps}
                 </Form.Control>
-            </Form.Group>;
+                
+                
+                
+            </Form.Group>
+            
+            ;
         }else{
             formEnd = 
                  <Form.Group controlId="description">
@@ -208,6 +217,7 @@ export class DataPointEdit extends DataPoint {
         let description = <Form.Control as="textarea" rows="3" onChange={this.handleDesc} value={this.state.description} />
         return (
             <Container>
+              {link}
                 <Form>
                     <Form.Group controlId="title">
                         <Form.Label>Title</Form.Label>
@@ -228,12 +238,12 @@ export class DataPointEdit extends DataPoint {
                         </Form.Control>
                     </Form.Group>
                     {formEnd}
-
+                    
                     <Row>
                         <Col><Button variant="primary" onClick={this.handleSave}>Save</Button></Col>
                         <Col><Button variant="danger" onClick={this.handleCancel}>Cancel</Button></Col>
                     </Row>
-
+                    
 
 
                 </Form>

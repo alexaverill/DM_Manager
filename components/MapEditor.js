@@ -1,5 +1,5 @@
 import React from 'react';
-import {useRouter} from 'next/router';
+import {useRouter, Router} from 'next/router';
 import { DataPointCreate,DataPointEdit } from './MapDataPoint';
 import styles from '../styles/map.module.css'
 import {GetRequest,PostRequest} from './api'
@@ -127,8 +127,9 @@ export default class Map extends React.Component{
         let worldPos = this.screenToWorld(xPos,yPos,event.target);
         let test = this.hitTest(worldPos.x,worldPos.y,this.state.points,50);
         if(test.found){
+            
             let point = this.state.points[test.id];
-            console.log("point found");
+            //console.log("point found");
             
             this.setState({hasPoint:true,activePoint:point});
         }else{
