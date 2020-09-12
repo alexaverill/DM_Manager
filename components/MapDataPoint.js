@@ -8,13 +8,14 @@ import { GetRequest, PostRequest } from './api';
 class DataPoint extends Component {
     constructor(props) {
         super(props);
-        this.state = { mapId:this.props.mapId,id:this.props.id,types: [], visibility: [], name: "", description: "", x: this.props.x, y: this.props.y, type: 0, permission: 0 }
+        this.state = { mapId:this.props.mapId,id:this.props.id,types: [], visibility: [], name: "", description: "", x: this.props.x, y: this.props.y, type: 0, permission: 0, availableMaps:[]}
         this.handleName = this.handleName.bind(this);
         this.handleType = this.handleType.bind(this);
         this.handleDesc = this.handleDesc.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.handlePerms = this.handlePerms.bind(this);
+        this.handleLink = this.handleLink.bind(this);
     }
     componentDidMount() {
         GetRequest("http://localhost:3000/api/pointtypes").then((data) => {
@@ -35,6 +36,9 @@ class DataPoint extends Component {
                 console.log("Failure returninng visilibity from API");
             }
         });
+        GetRequest('http://localhost:3000/api/maps').then((data) => {
+            this.setState({availableMaps:data.maps});
+        });
     }
     handleName(event) {
 
@@ -42,6 +46,9 @@ class DataPoint extends Component {
     }
     handleDesc(event) {
         this.setState({ description: event.target.value })
+    }
+    handleLink(event){
+        this.setState({description:event.target.value});//hack to store id of the needed linked layer in description
     }
     handleSave() {
         console.log(this.state.permission);
@@ -63,7 +70,9 @@ class DataPoint extends Component {
         this.setState({name:"",description:"",id:""})
     }
     handleType(event) {
+        
         this.setState({ type: event.target.value });
+        console.log(this.state.type);
     }
     handlePerms(event) {
 
@@ -77,12 +86,37 @@ class DataPoint extends Component {
 }
 export class DataPointCreate extends DataPoint {
     render() {
+        console.log("rendering");
         let types = this.state.types.map((type) =>
             <option key={type.id.toString()} value={type.id}>{type.typeName}</option>
         );
         let visibility = this.state.visibility.map((perms) =>
             <option key={perms.id.toString()} value={perms.id}>{perms.name}</option>
         );
+        let maps = this.state.availableMaps.map((m)=>
+            <option key={m.id} value={m.id}>{m.name}</option>
+        );
+        let formEnd = this.state.type;
+        if(this.state.type == 6){
+            
+            
+            formEnd = 
+            <Form.Group controlId="description">
+                 <Form.Label>Linked Layer</Form.Label>
+            <Form.Control as="select" onChange={this.handleLink}>
+            <option></option>
+                            {maps}
+                </Form.Control>
+            </Form.Group>;
+        }else{
+            formEnd = 
+                 <Form.Group controlId="description">
+        <Form.Label>Description</Form.Label>
+        <Form.Control as="textarea" rows="3" onChange={this.handleDesc} value={this.state.description}/>
+    </Form.Group>;
+        }
+  
+
         let nameInput = <Form.Control as="input" onChange={this.handleName} />
         return (
             <Container>
@@ -105,11 +139,7 @@ export class DataPointCreate extends DataPoint {
                             {visibility}
                         </Form.Control>
                     </Form.Group>
-                    <Form.Group controlId="description">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control as="textarea" rows="3" onChange={this.handleDesc} value={this.state.description}/>
-                    </Form.Group>
-
+                    {formEnd}
                     <Row>
                         <Col><Button variant="primary" onClick={this.handleSave}>Save</Button></Col>
                         <Col><Button variant="danger" onClick={this.handleCancel}>Cancel</Button></Col>
@@ -129,10 +159,11 @@ export class DataPointEdit extends DataPoint {
     }
     componentDidMount(){
         super.componentDidMount();
-        console.log(this.state.types);
-        this.setState({name:this.props.name, description:this.props.description, type:1,permission:1});
+        console.log(this.state.type);
+        this.setState({name:this.props.name, description:this.props.description, type:this.props.type,permission:1});
     }
     render() {
+        console.log(`State: ${this.state.type}`);
         let types = this.state.types.map((type)=>{
             if(type.id === this.state.type){
                 return <option key={type.id.toString()} value={type.id} selected>{type.typeName}</option>
@@ -146,7 +177,33 @@ export class DataPointEdit extends DataPoint {
             }else{
                 return <option key={perms.id.toString()} value={perms.id}>{perms.name}</option>
             }
-        });        
+        });       
+        let maps = this.state.availableMaps.map((m)=>{
+        if(this.state.description == m.id){
+            return <option key={m.id} value={m.id} selected>{m.name}</option>
+        }else{
+            return <option key={m.id} value={m.id}>{m.name}</option>
+        }
+    });
+        let formEnd;
+        if(this.state.type == 6){
+            
+            
+            formEnd = 
+            <Form.Group controlId="description">
+                 <Form.Label>Linked Layer</Form.Label>
+            <Form.Control as="select" onChange={this.handleLink}>
+            <option></option>
+                            {maps}
+                </Form.Control>
+            </Form.Group>;
+        }else{
+            formEnd = 
+                 <Form.Group controlId="description">
+        <Form.Label>Description</Form.Label>
+        <Form.Control as="textarea" rows="3" onChange={this.handleDesc} value={this.state.description}/>
+    </Form.Group>;
+        } 
         let nameInput = <Form.Control as="input" onChange={this.handleName} value={this.state.name} />
         let description = <Form.Control as="textarea" rows="3" onChange={this.handleDesc} value={this.state.description} />
         return (
@@ -170,10 +227,7 @@ export class DataPointEdit extends DataPoint {
                             {visibility}
                         </Form.Control>
                     </Form.Group>
-                    <Form.Group controlId="description">
-                        <Form.Label>Description</Form.Label>
-                        {description}
-                    </Form.Group>
+                    {formEnd}
 
                     <Row>
                         <Col><Button variant="primary" onClick={this.handleSave}>Save</Button></Col>

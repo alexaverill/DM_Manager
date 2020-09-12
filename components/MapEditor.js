@@ -154,7 +154,7 @@ export default class Map extends React.Component{
         let xPos = this.state.x;
         let yPos = this.state.y;
         const name = this.state.hasPoint ? this.state.activePoint.name: '';
-        console.log(name);
+        console.log(this.state.activePoint);
         let description = this.state.hasPoint ? this.state.activePoint.description : '';
         let type = 1;
         let visibility = 1;
@@ -164,7 +164,7 @@ export default class Map extends React.Component{
             <div className={sidebarClasses}>
                 <h2>Data Entry!</h2>
                 { this.state.hasPoint?
-                    <DataPointEdit close ={this.handleSidebarCancel} save={this.handleSidebarSave} mapId={this.state.mapId} id={this.state.activePoint.id} x={this.state.activePoint.x} y={this.state.activePoint.y} name={this.state.activePoint.name} description={this.state.activePoint.description}/>
+                    <DataPointEdit close ={this.handleSidebarCancel} save={this.handleSidebarSave} mapId={this.state.mapId} id={this.state.activePoint.id} x={this.state.activePoint.x} y={this.state.activePoint.y} name={this.state.activePoint.name} description={this.state.activePoint.description} type={this.state.activePoint.type.id}/>
                 :<DataPointCreate mapId={this.state.mapId} id={0} close={this.handleSidebarCancel} save={this.handleSidebarSave} x={xPos} y={yPos}/>
                 }
             </div>

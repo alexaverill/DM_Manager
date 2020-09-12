@@ -10,8 +10,9 @@ async function SaveMapPoint(data){
         point = await MapControl.MapPoint.update(
             {
                 name:newP.name,
-                description:newP.description
-                
+                description:newP.description,
+                permissionId:permission,
+                pointTypeId:type
             },
             {
                 where:{
@@ -19,8 +20,9 @@ async function SaveMapPoint(data){
                 }
             }
         );
-        await point.setPermission(permission);
-        await point.setPointType(type);
+        // console.log(permission);
+        // await point.setPermission(permission);
+        // await point.setPointType(type);
     }else{
         point = await MapControl.MapPoint.create(newP);
         await point.setPermission(permission);

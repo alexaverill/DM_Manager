@@ -10,7 +10,7 @@ export default async function (req, res) {
             },
             include: Database.Types
         });
-        
+        console.log(mapPoints[0].pointType);
         res.json({points:mapPoints});
     }
   }
