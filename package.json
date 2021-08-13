@@ -14,7 +14,7 @@
     "dotenv": "^8.2.0",
     "express-fileupload": "^1.1.9",
     "formidable-serverless": "^1.0.3",
-    "next": "9.4.4",
+    "next": "11.1.0",
     "react": "16.13.1",
     "react-bootstrap": "^1.1.1",
     "react-dom": "16.13.1",
